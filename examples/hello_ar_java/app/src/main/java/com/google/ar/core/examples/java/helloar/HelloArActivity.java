@@ -83,9 +83,9 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     private final BackgroundRenderer mBackgroundRenderer = new BackgroundRenderer();
 
-    private final PlaneRenderer mPlaneRenderer = new PlaneRenderer();
-    private final PointCloudRenderer mPointCloud = new PointCloudRenderer();
-    private TapHelper tapHelper;
+//    private final PlaneRenderer mPlaneRenderer = new PlaneRenderer();
+//    private final PointCloudRenderer mPointCloud = new PointCloudRenderer();
+//    private TapHelper tapHelper;
 
     // Temporary matrix allocated here to reduce number of allocations for each frame.
     private final float[] mAnchorMatrix = new float[16];
@@ -104,8 +104,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
         mSurfaceView = findViewById(R.id.surfaceview);
         mDisplayRotationHelper = new DisplayRotationHelper(/*context=*/ this);
 
-        tapHelper = new TapHelper(/*context=*/ this);
-        mSurfaceView.setOnTouchListener(tapHelper);
+//        tapHelper = new TapHelper(/*context=*/ this);
+//        mSurfaceView.setOnTouchListener(tapHelper);
 
         // Set up renderer.
         mSurfaceView.setPreserveEGLContextOnPause(true);
@@ -140,9 +140,9 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
         // Create default config and check if supported.
         Config config = new Config(mSession);
-        if (!mSession.isSupported(config)) {
-            showSnackbarMessage("This device does not support AR", true);
-        }
+//        if (!mSession.isSupported(config)) {
+//            showSnackbarMessage("This device does not support AR", true);
+//        }
         mSession.configure(config);
 
 
@@ -216,7 +216,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
             if(locationScene != null)
                 locationScene.resume();
             if (mSession != null) {
-                showLoadingMessage();
+//                showLoadingMessage();
                 // Note that order matters - see the note in onPause(), the reverse applies here.
                 try {
                     mSession.resume();
@@ -302,12 +302,12 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
         } catch (IOException e) {
             Log.e(TAG, "Failed to read obj file");
         }*/
-        try {
-            mPlaneRenderer.createOnGlThread(/*context=*/this, "trigrid.png");
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to read plane texture");
-        }
-        mPointCloud.createOnGlThread(/*context=*/this);
+//        try {
+//            mPlaneRenderer.createOnGlThread(/*context=*/this, "trigrid.png");
+//        } catch (IOException e) {
+//            Log.e(TAG, "Failed to read plane texture");
+//        }
+//        mPointCloud.createOnGlThread(/*context=*/this);
     }
 
     @Override
@@ -338,11 +338,11 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
             // Handle taps. Handling only one tap per frame, as taps are usually low frequency
             // compared to frame rate.
-            MotionEvent tap = tapHelper.poll();
-            if (tap != null && camera.getTrackingState() == TrackingState.TRACKING) {
-                Log.i(TAG, "HITTEST: Got a tap and tracking");
-                Utils2D.handleTap(this, locationScene, frame, tap);
-            }
+//            MotionEvent tap = tapHelper.poll();
+//            if (tap != null && camera.getTrackingState() == TrackingState.TRACKING) {
+//                Log.i(TAG, "HITTEST: Got a tap and tracking");
+//                Utils2D.handleTap(this, locationScene, frame, tap);
+//            }
 
             // Draw background.
             mBackgroundRenderer.draw(frame);
@@ -355,52 +355,52 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                 return;
             }
 
-            // Get projection matrix.
-            float[] projmtx = new float[16];
-            camera.getProjectionMatrix(projmtx, 0, 0.1f, 100.0f);
-
-            // Get camera matrix and draw.
-            float[] viewmtx = new float[16];
-            camera.getViewMatrix(viewmtx, 0);
-
-            // Compute lighting from average intensity of the image.
-            final float lightIntensity = frame.getLightEstimate().getPixelIntensity();
-
-            // Visualize tracked points.
-            PointCloud pointCloud = frame.acquirePointCloud();
-            mPointCloud.update(pointCloud);
-            mPointCloud.draw(viewmtx, projmtx);
-
-            // Application is responsible for releasing the point cloud resources after
-            // using it.
-            pointCloud.release();
-
+//            // Get projection matrix.
+//            float[] projmtx = new float[16];
+//            camera.getProjectionMatrix(projmtx, 0, 0.1f, 100.0f);
+//
+//            // Get camera matrix and draw.
+//            float[] viewmtx = new float[16];
+//            camera.getViewMatrix(viewmtx, 0);
+//
+//            // Compute lighting from average intensity of the image.
+//            final float lightIntensity = frame.getLightEstimate().getPixelIntensity();
+//
+//            // Visualize tracked points.
+//            PointCloud pointCloud = frame.acquirePointCloud();
+//            mPointCloud.update(pointCloud);
+//            mPointCloud.draw(viewmtx, projmtx);
+//
+//            // Application is responsible for releasing the point cloud resources after
+//            // using it.
+//            pointCloud.release();
+//
             // Check if we detected at least one plane. If so, hide the loading message.
-            if (mMessageSnackbar != null) {
-                for (Plane plane : mSession.getAllTrackables(Plane.class)) {
-                    if (plane.getType() == com.google.ar.core.Plane.Type.HORIZONTAL_UPWARD_FACING
-                            && plane.getTrackingState() == TrackingState.TRACKING) {
-                        hideLoadingMessage();
-                        break;
-                    }
-                }
-            }
+//            if (mMessageSnackbar != null) {
+//                for (Plane plane : mSession.getAllTrackables(Plane.class)) {
+//                    if (plane.getType() == com.google.ar.core.Plane.Type.HORIZONTAL_UPWARD_FACING
+//                            && plane.getTrackingState() == TrackingState.TRACKING) {
+//                        hideLoadingMessage();
+//                        break;
+//                    }
+//                }
+//            }
 
             // Visualize planes.
-            mPlaneRenderer.drawPlanes(
-                mSession.getAllTrackables(Plane.class), camera.getDisplayOrientedPose(), projmtx);
+//            mPlaneRenderer.drawPlanes(
+//                mSession.getAllTrackables(Plane.class), camera.getDisplayOrientedPose(), projmtx);
 
             // Visualize anchors created by touch.
-            float scaleFactor = 1.0f;
-            for (Anchor anchor : mAnchors) {
-                if (anchor.getTrackingState() != TrackingState.TRACKING) {
-                    continue;
-                }
-                // Get the current pose of an Anchor in world space. The Anchor pose is updated
-                // during calls to session.update() as ARCore refines its estimate of the world.
-                anchor.getPose().toMatrix(mAnchorMatrix, 0);
-
-            }
+//            float scaleFactor = 1.0f;
+//            for (Anchor anchor : mAnchors) {
+//                if (anchor.getTrackingState() != TrackingState.TRACKING) {
+//                    continue;
+//                }
+//                // Get the current pose of an Anchor in world space. The Anchor pose is updated
+//                // during calls to session.update() as ARCore refines its estimate of the world.
+//                anchor.getPose().toMatrix(mAnchorMatrix, 0);
+//
+//            }
 
 
 
